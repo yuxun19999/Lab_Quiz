@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'master', url: 'https://github.com/yuxun19999/Lab_Quiz.git'
             }
         }
 
@@ -28,9 +28,18 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Code Quality Check via SonarQube') {
             steps {
-                // Add additional build steps if needed
+                script {
+                    def scannerHome = tool 'SonarQube'
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=Lab \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://sonarqube:9000 \
+                            -Dsonar.token=sqp_da8194385ac933b5cb87dbe0deb173c9638548ca"
+                    }
+                }
             }
         }
 
@@ -56,5 +65,12 @@ pipeline {
         failure {
             echo 'Pipeline failed!'
         }
+
+        always {
+            recordIssues enabledForFailure: true, tool: sonarQube()
+        }
     }
 }
+
+
+
