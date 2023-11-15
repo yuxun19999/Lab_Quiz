@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  jenkins:
+    container_name: jenkins
+    build: ./jenkins
+    ports:
+      - '8080:8080'
+      - '443:8443'
+      - '50000:50000'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins_home:/var/jenkins_home
+
+  webapp:
+    container_name: webapp
+    build: ./webapp
+    ports:
+      - "80:80"
+
+  git-server:
+    image: alpine/git
+    container_name: git-server
+    volumes:
+      - /Users/yuxun/Downloads/Question:/git-data
+    environment:
+      - GIT_REPO_NAME=Lab_Quiz.git
+      - USERNAME=yuxun19999
+      - PASSWORD=Haha_2407
+      - GIT_EMAIL=yuxun19999@gmail.com
+
+volumes:
+  git-data:
+  jenkins_data:
+    driver: local

@@ -1,0 +1,38 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+</head>
+<body>
+  <form id="loginForm" action="/login" method="post">
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <button type="button" onclick="submitForm()">Login</button>
+  </form>
+
+  <script>
+    function submitForm() {
+      // Get the password value
+      const password = document.getElementById('password').value;
+
+      // Send an asynchronous POST request to the server
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `password=${encodeURIComponent(password)}`,
+      })
+      .then(response => {
+        // Handle the response, e.g., redirect to the welcome page
+        window.location.href = response.url;
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+</body>
+</html>
